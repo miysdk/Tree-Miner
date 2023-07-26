@@ -27,4 +27,10 @@ public class PlayerStats : MonoBehaviour
         logs += value;
         logsText.text = logs.ToString();
     }
+
+    public void ClearStats()
+    {
+        logs = 0;
+        logsText.text = logs.ToString();
+    }
 }

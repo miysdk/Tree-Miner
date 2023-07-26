@@ -9,22 +9,26 @@ public class PlayerController : MonoBehaviour
     public GameObject damage;
     public Animator animator;
 
+    Vector3 respawnPos;
     Rigidbody rb;
     PlayerInput pi;
-    public bool isHarvesting = false;
+    PlayerStats ps;
+    bool isHarvesting = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         pi = GetComponent<PlayerInput>();
+        ps = GetComponent<PlayerStats>();
+        respawnPos = transform.position;
     }
 
     void Update()
     {
         Vector2 input = pi.actions["Move"].ReadValue<Vector2>();
-        Vector3 movementDirection = new Vector3(input.x, 0f, input.y);
+        Vector3 movementDirection = new Vector3(input.x, 0, input.y);
 
-        rb.velocity = movementDirection * speed;
+        rb.velocity = movementDirection * speed + new Vector3(0, rb.velocity.y, 0);
 
         if (movementDirection != Vector3.zero)
         {
@@ -40,6 +44,13 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isHarvesting", isHarvesting);
     }
 
+    private void Death()
+    {
+        transform.position = respawnPos;
+        if (ps is not null)
+            ps.ClearStats();
+    }
+
     private IEnumerator Damage()
     {
         isHarvesting = true;
@@ -51,6 +62,14 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(.1f);
             damage.SetActive(false);
             isHarvesting = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            Death();
         }
     }
 
