@@ -13,13 +13,11 @@ public class Harvestable : MonoBehaviour
     public GameObject drop;
 
     BoxCollider bc;
-    float sizeDecrement;
     int currentCapacity;
 
     void Start()
     {
         bc = GetComponent<BoxCollider>();
-        sizeDecrement = 1 / ((float)capacity + 1);
         currentCapacity = capacity;
     }
 

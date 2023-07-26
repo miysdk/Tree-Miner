@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerStats : MonoBehaviour
 {
     public static PlayerStats instance;
+
+    public TextMeshProUGUI logsText;
 
     public int logs = 0;
 
@@ -15,10 +18,13 @@ public class PlayerStats : MonoBehaviour
             Destroy(this);
         }
         else instance = this;
+
+        logsText.text = logs.ToString();
     }
 
     public void IncreaseLogs(int value)
     {
         logs += value;
+        logsText.text = logs.ToString();
     }
 }

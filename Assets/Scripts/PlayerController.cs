@@ -28,14 +28,16 @@ public class PlayerController : MonoBehaviour
 
         if (movementDirection != Vector3.zero)
         {
-            //animator.SetBool("isMoving", true);
+            animator.SetBool("isMoving", true);
             Quaternion targetRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
             rb.MoveRotation(targetRotation);
         }
         else
         {
-            //animator.SetBool("isMoving", false);
+            animator.SetBool("isMoving", false);
         }
+
+        animator.SetBool("isHarvesting", isHarvesting);
     }
 
     private IEnumerator Damage()
@@ -43,26 +45,20 @@ public class PlayerController : MonoBehaviour
         isHarvesting = true;
         while (isHarvesting)
         {
+
+            yield return new WaitForSeconds(attackSpeed);
             damage.SetActive(true);
             yield return new WaitForSeconds(.1f);
             damage.SetActive(false);
-            yield return new WaitForSeconds(attackSpeed);
+            isHarvesting = false;
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Harvestable") && !isHarvesting)
         {
             StartCoroutine(Damage());
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Harvestable"))
-        {
-            isHarvesting = false;
         }
     }
 }
